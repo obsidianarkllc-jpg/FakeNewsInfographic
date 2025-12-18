@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restoring Trust in News Through Competitive Transparency Ratings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1a1a2e;
+            --primary-accent: #e63946;
+            --secondary-accent: #f4a261;
+            --tertiary-accent: #2a9d8f;
+            --light-bg: #f8f9fa;
+            --text-dark: #212529;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative corner accent */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle at top right, var(--primary-accent), transparent);
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        header {
+            background: var(--primary-dark);
+            color: white;
+            padding: 3rem 2.5rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent), var(--tertiary-accent));
+        }
+
+        h1 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2.8rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        .subtitle {
+            font-family: 'Libre Baskerville', serif;
+            font-style: italic;
+            font-size: 1.3rem;
+            color: var(--secondary-accent);
+            margin-bottom: 1.5rem;
+            animation: slideInLeft 0.8s ease-out 0.2s backwards;
+        }
+
+        .byline {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            animation: fadeIn 1s ease-out 0.4s backwards;
+        }
+
+        /* Problem Section */
+        .problem-section {
+            background: linear-gradient(135deg, var(--primary-accent) 0%, #d62839 100%);
+            color: white;
+            padding: 3rem 2.5rem;
+            position: relative;
+            animation: fadeIn 1s ease-out 0.6s backwards;
+        }
+
+        .section-label {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .problem-title {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .problem-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        /* Statistics Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 3rem 2.5rem;
+            background: var(--light-bg);
+            animation: fadeIn 1s ease-out 0.8s backwards;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 5px solid var(--tertiary-accent);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-number {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 3rem;
+            color: var(--tertiary-accent);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .stat-source {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        /* Why This Matters Section */
+        .impact-section {
+            padding: 3rem 2.5rem;
+            background: white;
+            animation: fadeIn 1s ease-out 1s backwards;
+        }
+
+        .impact-section h2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2rem;
+            color: var(--primary-dark);
+            margin-bottom: 2rem;
+            border-bottom: 3px solid var(--secondary-accent);
+            padding-bottom: 0.5rem;
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .impact-item {
+            display: flex;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .impact-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary-accent), var(--primary-accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.5rem;
+        }
+
+        .impact-content h3 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+        }
+
+        .impact-content p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* The Problem Cycle */
+        .cycle-section {
+            padding: 3rem 2.5rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            animation: fadeIn 1s ease-out 1.2s backwards;
+        }
+
+        .cycle-section h2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2rem;
+            color: var(--primary-dark);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .cycle-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .cycle-step {
+            flex: 1;
+            min-width: 200px;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .cycle-step-number {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2.5rem;
+            color: var(--primary-accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .cycle-step-text {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--text-dark);
+        }
+
+        .arrow {
+            font-size: 2.5rem;
+            color: rgba(230, 57, 70, 0.4);
+            flex-shrink: 0;
+        }
+
+        /* Solution Section */
+        .solution-section {
+            padding: 3rem 2.5rem;
+            background: linear-gradient(135deg, var(--tertiary-accent) 0%, #229182 100%);
+            color: white;
+            animation: fadeIn 1s ease-out 1.4s backwards;
+        }
+
+        .solution-section h2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .solution-intro {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+            opacity: 0.95;
+        }
+
+        .solution-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: background 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .feature-card h3 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 3rem 2.5rem;
+            background: white;
+            animation: fadeIn 1s ease-out 1.6s backwards;
+        }
+
+        .how-it-works h2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2rem;
+            color: var(--primary-dark);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .process-step {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .process-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--secondary-accent);
+            color: white;
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .process-step h3 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+        }
+
+        .process-step p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Addressing Challenges */
+        .challenges-section {
+            padding: 3rem 2.5rem;
+            background: var(--light-bg);
+            animation: fadeIn 1s ease-out 1.8s backwards;
+        }
+
+        .challenges-section h2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2rem;
+            color: var(--primary-dark);
+            margin-bottom: 2rem;
+        }
+
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .challenge-item {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            border-top: 4px solid var(--primary-accent);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .challenge-item h3 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.2rem;
+            color: var(--primary-accent);
+            margin-bottom: 1rem;
+        }
+
+        .challenge-item p {
+            color: var(--text-dark);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .response-label {
+            font-weight: 700;
+            color: var(--tertiary-accent);
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Call to Action */
+        .cta-section {
+            padding: 3rem 2.5rem;
+            background: var(--primary-dark);
+            color: white;
+            text-align: center;
+            animation: fadeIn 1s ease-out 2s backwards;
+            position: relative;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3NTAwIDM5MDAiPgo8cmVjdCB3aWR0aD0iNzUwMCIgaGVpZ2h0PSIzOTAwIiBmaWxsPSIjYjIyMjM0Ii8+CjxwYXRoIGQ9Ik0wLDQ1MEg3NTAwbTAsNjAwSDBtMCw2MDBoNzUwMG0wLDYwMEgwbTAsNjAwaDc1MDBtMCw2MDBIMCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjMwMCIvPgo8cmVjdCB3aWR0aD0iMzAwMCIgaGVpZ2h0PSIyMTAwIiBmaWxsPSIjM2MzYjZlIi8+CjxnIGZpbGw9IiNmZmYiPgo8ZyBpZD0iczE4Ij4KPGcgaWQ9InM5Ij4KPGcgaWQ9InM1Ij4KPGcgaWQ9InM0Ij4KPHBhdGggaWQ9InMiIGQ9Ik0yNDcsMTgwTDI1NC4zLDIwNS4wTDIzMC43LDE4OC41TDI2My4zLDE4OC41TDIzOS43LDIwNS4wWiIvPgo8dXNlIGhyZWY9IiNzIiB5PSI0MjAiLz4KPHVzZSBocmVmPSIjcyIgeT0iODQwIi8+Cjx1c2UgaHJlZj0iI3MiIHk9IjEyNjAiLz4KPC9nPgo8dXNlIGhyZWY9IiNzIiB5PSIxNjgwIi8+CjwvZz4KPHVzZSBocmVmPSIjczQiIHg9IjI0NyIgeT0iMjEwIi8+CjwvZz4KPHVzZSBocmVmPSIjczkiIHg9IjQ5NCIvPgo8L2c+Cjx1c2UgaHJlZj0iI3MxOCIgeD0iOTg4Ii8+Cjx1c2UgaHJlZj0iI3M5IiB4PSIxOTc2Ii8+Cjx1c2UgaHJlZj0iI3M1IiB4PSIyNDcwIi8+CjwvZz4KPC9zdmc+');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .cta-section > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section h2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-text {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            opacity: 0.95;
+        }
+
+        .cta-highlight {
+            font-family: 'Libre Baskerville', serif;
+            font-style: italic;
+            font-size: 1.5rem;
+            color: var(--secondary-accent);
+            margin-top: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 2.5rem;
+            background: #f8f9fa;
+            border-top: 3px solid var(--border-color);
+        }
+
+        .sources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .source-item {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            padding: 0.5rem 0;
+        }
+
+        footer h3 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Animations */
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .problem-title {
+                font-size: 1.6rem;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+
+            .cycle-flow {
+                flex-direction: column;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+            }
+
+            .stat-card:hover,
+            .feature-card:hover {
+                transform: none;
+            }
+
+            .citation-tooltip {
+                display: none;
+            }
+        }
+
+        /* Easter Egg Styles */
+        .trust-meter-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(42, 157, 143, 0.3), transparent);
+            height: 0%;
+            transition: height 2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 12px;
+            pointer-events: none;
+        }
+
+        .stat-card:hover .trust-meter-fill {
+            height: 56% !important;
+        }
+
+        .stat-card:nth-child(2):hover .trust-meter-fill {
+            height: 50% !important;
+        }
+
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Citation Tooltips */
+        .citation-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: var(--primary-dark);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .citation-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--primary-dark);
+        }
+
+        .stat-number:hover + .citation-tooltip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-5px);
+        }
+
+        .has-citation {
+            cursor: help;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Restoring Trust in News Through Competitive Transparency Ratings</h1>
+            <p class="subtitle">A Solution to America's Media Credibility Crisis</p>
+            <p class="byline">Ron Altamura | ENG 101 Composition I | Professor Chamberlain | December 2025</p>
+        </header>
+
+        <section class="problem-section">
+            <div class="section-label">The Problem</div>
+            <h2 class="problem-title">America's Trust in News Has Collapsed</h2>
+            <p class="problem-text">
+                Audiences see the same destructive cycle again and again: dramatic early coverage followed by quiet corrections that most people never notice. This pattern has created a credibility crisis where people can't distinguish reliable reporting from speculation, and different groups form political views using completely different sets of information.
+            </p>
+        </section>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="trust-meter-fill"></div>
+                <div class="stat-number has-citation">56%</div>
+                <div class="citation-tooltip">Eddy & Shearer, Pew Research Center (2025)</div>
+                <div class="stat-label">Trust in national news media (declining)</div>
+                <div class="stat-source">Pew Research Center, 2025</div>
+            </div>
+            <div class="stat-card">
+                <div class="trust-meter-fill"></div>
+                <div class="stat-number has-citation">50%+</div>
+                <div class="citation-tooltip">Reuters Institute Digital News Report (2025)</div>
+                <div class="stat-label">Americans now avoid news altogether due to skepticism</div>
+                <div class="stat-source">Reuters Institute, 2025</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">Growing Gap</div>
+                <div class="stat-label">Trust gap across age groups continues to widen</div>
+                <div class="stat-source">Pew Research Center, 2025</div>
+            </div>
+        </div>
+
+        <section class="impact-section">
+            <h2>Why This Crisis Affects Everyone</h2>
+            <div class="impact-grid">
+                <div class="impact-item">
+                    <div class="impact-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;">
+                            <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
+                            <path d="M18 14h-8"></path>
+                            <path d="M15 18h-5"></path>
+                            <path d="M10 6h8v4h-8V6Z"></path>
+                        </svg>
+                    </div>
+                    <div class="impact-content">
+                        <h3>News Consumers Struggle</h3>
+                        <p>Readers can't determine which outlets deserve confidence, making informed decision-making harder.</p>
+                    </div>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;">
+                            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+                            <path d="m15 5 4 4"></path>
+                        </svg>
+                    </div>
+                    <div class="impact-content">
+                        <h3>Quality Journalism Suffers</h3>
+                        <p>Reporters doing solid work get grouped with weaker sources, undermining their credibility.</p>
+                    </div>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;">
+                            <path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3z"></path>
+                            <path d="M12 12 4 7.5"></path>
+                            <path d="m12 12 8-4.5"></path>
+                            <path d="M12 12v9"></path>
+                        </svg>
+                    </div>
+                    <div class="impact-content">
+                        <h3>National Divide Deepens</h3>
+                        <p>Americans form political views using completely different information sources, fracturing shared reality.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cycle-section">
+            <h2>The Destructive Pattern</h2>
+            <div class="cycle-flow">
+                <div class="cycle-step">
+                    <div class="cycle-step-number">1</div>
+                    <div class="cycle-step-text"><strong>Dramatic Early Coverage</strong><br>Outlets rush to break news first</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="cycle-step">
+                    <div class="cycle-step-number">2</div>
+                    <div class="cycle-step-text"><strong>First Impressions Form</strong><br>Audiences absorb initial narrative</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="cycle-step">
+                    <div class="cycle-step-number">3</div>
+                    <div class="cycle-step-text"><strong>Quiet Corrections</strong><br>Updates receive fraction of attention</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="cycle-step">
+                    <div class="cycle-step-number">4</div>
+                    <div class="cycle-step-text"><strong>Original Story Sticks</strong><br>Most readers never see corrections</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="solution-section">
+            <h2>The Solution: Competitive Transparency Ratings</h2>
+            <p class="solution-intro">
+                Instead of one group deciding what neutrality means, multiple independent graders would score news outlets monthly using shared, transparent criteria. Journalism schools, media researchers, and international watchdog groups would participate, creating visible accountability.
+            </p>
+            <div class="solution-features">
+                <div class="feature-card">
+                    <h3>Multiple Graders</h3>
+                    <p>Columbia, ASU journalism schools, media researchers, and international watchdogs provide diverse perspectives.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Clear Metrics</h3>
+                    <p>Accuracy, source transparency, correction responsiveness, bias indicators, and framing integrity.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Public Dashboard</h3>
+                    <p>Lists methods, sample cases, and historical trends—full transparency about the rating process itself.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Visible Display</h3>
+                    <p>A-F ratings shown at end of broadcasts and in article headers, making credibility easy to assess.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="how-it-works">
+            <h2>How It Works</h2>
+            <div class="process-grid">
+                <div class="process-step">
+                    <div class="process-number">1</div>
+                    <h3>Monthly Evaluation</h3>
+                    <p>Independent graders assess outlets using standardized criteria</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-number">2</div>
+                    <h3>Score Calculation</h3>
+                    <p>Grades assigned A-F across five key transparency categories</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-number">3</div>
+                    <h3>Public Display</h3>
+                    <p>Ratings shown prominently on broadcasts and articles</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-number">4</div>
+                    <h3>Compare & Decide</h3>
+                    <p>Readers see how different graders view the same outlet</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="challenges-section">
+            <h2>Addressing Challenges</h2>
+            <div class="challenge-grid">
+                <div class="challenge-item">
+                    <h3>Enforcement</h3>
+                    <p>Some outlets might refuse to display ratings voluntarily.</p>
+                    <div class="response-label">Response:</div>
+                    <p>Broadcast rules could require display (similar to existing disclosure requirements). Browser extensions could show ratings automatically for online outlets that refuse.</p>
+                </div>
+                <div class="challenge-item">
+                    <h3>Funding</h3>
+                    <p>Independent grading requires sustained financial support.</p>
+                    <div class="response-label">Response:</div>
+                    <p>Journalism schools and nonprofits already rely on grants. Transparent funding disclosure helps audiences understand potential bias.</p>
+                </div>
+                <div class="challenge-item">
+                    <h3>Gaming the System</h3>
+                    <p>Outlets might try to manipulate ratings.</p>
+                    <div class="response-label">Response:</div>
+                    <p>Multiple graders make manipulation harder—no single strategy satisfies every evaluator. The dashboard displays all rating dimensions separately, making it impossible to hide weaknesses in one area while gaming another.</p>
+                </div>
+                <div class="challenge-item">
+                    <h3>First Amendment</h3>
+                    <p>Questions about restricting press freedom.</p>
+                    <div class="response-label">Response:</div>
+                    <p>Ratings don't restrict content; they require disclosure, similar to well-established transparency rules in other industries.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2>Trust Won't Recover on Its Own</h2>
+            <p class="cta-text">
+                If people keep seeing dramatic early coverage followed by quiet corrections, nothing changes. A Competitive Transparency Ratings system gives outlets a concrete way to earn trust instead of asking for it.
+            </p>
+            <p class="cta-text">
+                With open scoring, consistent standards, and visible improvement, the industry would have a reason to value accuracy again.
+            </p>
+            <p class="cta-highlight">
+                If outlets want trust back, the path starts with being transparent enough to prove it.
+            </p>
+        </section>
+
+        <footer>
+            <h3>Works Cited</h3>
+            <div class="sources-grid">
+                <div class="source-item">
+                    Bell, Emily. "The Fact-Check Industry." Columbia Journalism Review, 4 Dec. 2019.
+                </div>
+                <div class="source-item">
+                    Carey, John M., et al. "Prebunking and Credible Source Corrections Increase Election Credibility." Science Advances, vol. 11, no. 35, 2025.
+                </div>
+                <div class="source-item">
+                    Eddy, Kirsten, and Elisa Shearer. "How Americans' Trust in Information from News Organizations Has Changed." Pew Research Center, 29 Oct. 2025.
+                </div>
+                <div class="source-item">
+                    Ecker, Ullrich K. H., et al. "The Psychological Drivers of Misinformation Belief." Nature Reviews Psychology, vol. 1, 2022.
+                </div>
+                <div class="source-item">
+                    Freitag, Joshua, et al. "The Corrections Dilemma: Media Retractions Increase Belief Accuracy but Decrease Trust." Journal of Experimental Political Science, vol. 11, no. 1, 2024.
+                </div>
+                <div class="source-item">
+                    Nyhan, Brendan. "Why the 'Backfire Effect' Does Not Explain Political Misperceptions." Proceedings of the National Academy of Sciences, vol. 118, no. 15, 2021.
+                </div>
+                <div class="source-item">
+                    Reuters Institute. Digital News Report 2025. Reuters Institute for the Study of Journalism, 2025.
+                </div>
+                <div class="source-item">
+                    Wojdynski, Bartosz W., and Charlotte N. Varnum. The Search for Credibility. University of Georgia, Sept. 2023.
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
